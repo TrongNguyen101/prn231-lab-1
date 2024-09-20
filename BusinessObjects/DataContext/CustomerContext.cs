@@ -9,7 +9,7 @@ namespace BusinessObjects.DataContext
         public CustomerContext(){}
         public CustomerContext(DbContextOptions<CustomerContext> options) : base(options){}
 
-        public virtual DbSet<Customer> Customers { get; set; }
+        public DbSet<Customer> Customers { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

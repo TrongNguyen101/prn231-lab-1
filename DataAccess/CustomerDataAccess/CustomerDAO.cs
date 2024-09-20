@@ -5,16 +5,8 @@ using Microsoft.EntityFrameworkCore;
 namespace DataAccess.CustomerDataAccess
 {
     public class CustomerDataAccess
-    {
-        #region Customer context
-        private readonly CustomerContext context;
-        #endregion
-
-        #region CustomerDataAccess constructor
-        public CustomerDataAccess() => context = new CustomerContext();
-        #endregion
-        
-        #region Singleton disign pattern
+    {        
+        #region Singleton design pattern
         private static volatile CustomerDataAccess instance;
         private static readonly object lockInstance = new object();
 
@@ -40,7 +32,8 @@ namespace DataAccess.CustomerDataAccess
             var listCustomers = new List<Customer>();
             try
             {
-                listCustomers = await context.Customers.ToListAsync();
+               using var context = new CustomerContext();
+               listCustomers = await context.Customers.ToListAsync();
             }
             catch (Exception ex)
             {
