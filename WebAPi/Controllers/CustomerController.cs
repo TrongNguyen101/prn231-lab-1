@@ -1,12 +1,11 @@
 using BusinessObjects.DataTranfer;
-using BusinessObjects.Models;
 using Microsoft.AspNetCore.Mvc;
 using Repositories.CustomerRepo;
 
 namespace WebAPi.Controllers
 {
+    [Route("api/[controller]")]
     [ApiController]
-    [Route("[controller]")]
     public class CustomerController : ControllerBase
     {
         private ICustomerRepository repository;
@@ -20,6 +19,48 @@ namespace WebAPi.Controllers
         {
             var customers = await repository.GetAllCustomers();
             return Ok(customers);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<CustomerDTO>> GetCustomer(int id)
+        {
+            var customer = await repository.GetCustomer(id);
+            return Ok(customer);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateCustomer(CustomerDTO customer)
+        {
+            var _customer = await repository.CheckCustomerExist(customer.Username);
+            if (_customer == false)
+            {
+                await repository.AddCustomer(customer);
+                return Created();
+            }
+            return BadRequest("Customer is exist");
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateCustomer(int id, CustomerDTO customer)
+        {
+            var _customer = await repository.GetCustomer(id);
+            if(_customer != null)
+            {
+                await repository.UpdateCustomer(id, customer);
+                return NoContent();
+            }
+            return NotFound("Customer is not exist");
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCustomer(int id)
+        {
+            Boolean isDelete = await repository.DeleteCustomer(id);
+            if(isDelete == true)
+            {
+                return Ok("Delete customer successfully");
+            }
+            return NotFound("Customer is not exist");
         }
     }
 }
