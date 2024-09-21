@@ -6,8 +6,8 @@ namespace BusinessObjects.DataContext
 {
     public class CustomerContext : DbContext
     {
-        public CustomerContext(){}
-        public CustomerContext(DbContextOptions<CustomerContext> options) : base(options){}
+        public CustomerContext() { }
+        public CustomerContext(DbContextOptions<CustomerContext> options) : base(options) { }
 
         public DbSet<Customer> Customers { get; set; }
 
@@ -21,7 +21,7 @@ namespace BusinessObjects.DataContext
                    .Build();
                 var connectionString = configuration.GetConnectionString("TrongConnection");
                 optionsBuilder.UseSqlServer(connectionString);
-            }  
+            }
         }
-    } 
+    }
 }
