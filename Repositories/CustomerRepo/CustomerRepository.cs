@@ -91,5 +91,17 @@ namespace Repositories.CustomerRepo
             }
             return false;
         }
+        
+        public async Task MultipleDeleteCustomer(int[] selectedIds)
+        {
+            foreach (int id in selectedIds)
+            {
+                var customer = await CustomerDataAccess.GetInstance().GetCustomerById(id);
+                if (customer != null)
+                {
+                    await CustomerDataAccess.GetInstance().DeleteCustomer(customer);
+                }
+            }
+        }
     }
 }

@@ -11,5 +11,6 @@ namespace Repositories.CustomerRepo
         Task AddCustomer(CustomerDTO customerDTO);
         Task UpdateCustomer(int id, CustomerDTO customerDTO);
         Task<Boolean> DeleteCustomer(int id);
+        Task MultipleDeleteCustomer(int[] id);
     }
 }

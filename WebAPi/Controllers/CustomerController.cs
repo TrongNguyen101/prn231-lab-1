@@ -1,3 +1,4 @@
+using System.Text.Json;
 using BusinessObjects.DataTranfer;
 using Microsoft.AspNetCore.Mvc;
 using Repositories.CustomerRepo;
@@ -18,14 +19,14 @@ namespace WebAPi.Controllers
         public async Task<ActionResult<List<CustomerDTO>>> GetAllCustomer()
         {
             var customers = await repository.GetAllCustomers();
-            return Ok(customers);
+            return Ok(JsonSerializer.Serialize(customers));
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<CustomerDTO>> GetCustomer(int id)
         {
             var customer = await repository.GetCustomer(id);
-            return Ok(customer);
+            return Ok(JsonSerializer.Serialize(customer));
         }
 
         [HttpPost]
@@ -40,11 +41,19 @@ namespace WebAPi.Controllers
             return BadRequest("Customer is exist");
         }
 
+        [HttpPost]
+        [Route("MultipleDelete")]
+        public async Task<IActionResult> MultipleDelete(int[] selectedIds)
+        {
+            await repository.MultipleDeleteCustomer(selectedIds);
+            return Ok("Delete customer successfully");
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCustomer(int id, CustomerDTO customer)
         {
             var _customer = await repository.GetCustomer(id);
-            if(_customer != null)
+            if (_customer != null)
             {
                 await repository.UpdateCustomer(id, customer);
                 return NoContent();
@@ -56,7 +65,7 @@ namespace WebAPi.Controllers
         public async Task<IActionResult> DeleteCustomer(int id)
         {
             Boolean isDelete = await repository.DeleteCustomer(id);
-            if(isDelete == true)
+            if (isDelete == true)
             {
                 return Ok("Delete customer successfully");
             }
